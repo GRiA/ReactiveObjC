@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 GitHub. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACDynamicSequence.h"
 #import <libkern/OSAtomic.h>
 
@@ -114,11 +115,10 @@
 }
 
 - (void)dealloc {
-	static volatile int32_t directDeallocCount = 0;
+	__block atomic_int directDeallocCount = 0;
 
-	if (OSAtomicIncrement32(&directDeallocCount) >= DEALLOC_OVERFLOW_GUARD) {
-		OSAtomicAdd32(-DEALLOC_OVERFLOW_GUARD, &directDeallocCount);
-
+	if (atomic_fetch_add_explicit(&directDeallocCount, 1, memory_order_relaxed) >= DEALLOC_OVERFLOW_GUARD) {
+		atomic_fetch_add_explicit(&directDeallocCount, -DEALLOC_OVERFLOW_GUARD, memory_order_relaxed);
 		// Put this sequence's tail onto the autorelease pool so we stop
 		// recursing.
 		__autoreleasing RACSequence *tail __attribute__((unused)) = _tail;

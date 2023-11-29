@@ -6,9 +6,11 @@
 //  Copyright (c) 2012 GitHub, Inc. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACDisposable.h"
 #import "RACScopedDisposable.h"
 #import <libkern/OSAtomic.h>
+#import "atomic_ptr.h"
 
 @interface RACDisposable () {
 	// A copied block of type void (^)(void) containing the logic for disposal,
@@ -35,7 +37,8 @@
 	self = [super init];
 
 	_disposeBlock = (__bridge void *)self;
-	OSMemoryBarrier();
+	atomic_thread_fence(memory_order_relaxed);
+	//OSMemoryBarrier();
 
 	return self;
 }
@@ -45,8 +48,9 @@
 
 	self = [super init];
 
-	_disposeBlock = (void *)CFBridgingRetain([block copy]); 
-	OSMemoryBarrier();
+	_disposeBlock = (void *)CFBridgingRetain([block copy]);
+	atomic_thread_fence(memory_order_relaxed);
+	//OSMemoryBarrier();
 
 	return self;
 }
@@ -68,8 +72,9 @@
 	void (^disposeBlock)(void) = NULL;
 
 	while (YES) {
-		void *blockPtr = _disposeBlock;
-		if (OSAtomicCompareAndSwapPtrBarrier(blockPtr, NULL, &_disposeBlock)) {
+		atomic_ptr blockPtr = _disposeBlock;
+		//if (OSAtomicCompareAndSwapPtrBarrier(blockPtr, NULL, &_disposeBlock)) {
+		if (atomic_compare_exchange_strong(&blockPtr, _disposeBlock, NULL)) {
 			if (blockPtr != (__bridge void *)self) {
 				disposeBlock = CFBridgingRelease(blockPtr);
 			}

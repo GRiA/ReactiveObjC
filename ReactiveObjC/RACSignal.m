@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 GitHub, Inc. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACSignal.h"
 #import "RACCompoundDisposable.h"
 #import "RACDisposable.h"
@@ -108,12 +109,13 @@
 	return [[RACSignal createSignal:^(id<RACSubscriber> subscriber) {
 		RACSignalBindBlock bindingBlock = block();
 
-		__block volatile int32_t signalCount = 1;   // indicates self
+		__block volatile atomic_int signalCount = 1;   // indicates self
 
 		RACCompoundDisposable *compoundDisposable = [RACCompoundDisposable compoundDisposable];
 
 		void (^completeSignal)(RACDisposable *) = ^(RACDisposable *finishedDisposable) {
-			if (OSAtomicDecrement32Barrier(&signalCount) == 0) {
+			atomic_fetch_sub(&signalCount, 1);
+			if (signalCount == 0) {
 				[subscriber sendCompleted];
 				[compoundDisposable dispose];
 			} else {
@@ -122,7 +124,7 @@
 		};
 
 		void (^addSignal)(RACSignal *) = ^(RACSignal *signal) {
-			OSAtomicIncrement32Barrier(&signalCount);
+			atomic_fetch_add(&signalCount, 1);
 
 			RACSerialDisposable *selfDisposable = [[RACSerialDisposable alloc] init];
 			[compoundDisposable addDisposable:selfDisposable];

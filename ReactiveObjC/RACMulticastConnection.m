@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 GitHub, Inc. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACMulticastConnection.h"
 #import "RACMulticastConnection+Private.h"
 #import "RACDisposable.h"
@@ -24,7 +25,7 @@
 	//
 	// If the swap is unsuccessful it means that `_sourceSignal` has already been
 	// connected and the caller has no action to take.
-	int32_t volatile _hasConnected;
+	atomic_int volatile _hasConnected;
 }
 
 @property (nonatomic, readonly, strong) RACSignal *sourceSignal;
@@ -51,8 +52,8 @@
 #pragma mark Connecting
 
 - (RACDisposable *)connect {
-	BOOL shouldConnect = OSAtomicCompareAndSwap32Barrier(0, 1, &_hasConnected);
-
+	int notConnected = 0;
+	BOOL shouldConnect = atomic_compare_exchange_strong(&_hasConnected, &notConnected, 1);
 	if (shouldConnect) {
 		self.serialDisposable.disposable = [self.sourceSignal subscribe:_signal];
 	}
@@ -61,19 +62,17 @@
 }
 
 - (RACSignal *)autoconnect {
-	__block volatile int32_t subscriberCount = 0;
-
+	__block atomic_int subscriberCount = 0;
 	return [[RACSignal
 		createSignal:^(id<RACSubscriber> subscriber) {
-			OSAtomicIncrement32Barrier(&subscriberCount);
+		atomic_fetch_add(&subscriberCount, 1);
 
 			RACDisposable *subscriptionDisposable = [self.signal subscribe:subscriber];
 			RACDisposable *connectionDisposable = [self connect];
 
 			return [RACDisposable disposableWithBlock:^{
 				[subscriptionDisposable dispose];
-
-				if (OSAtomicDecrement32Barrier(&subscriberCount) == 0) {
+				if (atomic_fetch_sub(&subscriberCount, 1) == 0) {
 					[connectionDisposable dispose];
 				}
 			}];

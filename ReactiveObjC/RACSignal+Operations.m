@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 GitHub, Inc. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACSignal+Operations.h"
 #import "NSObject+RACDeallocating.h"
 #import "NSObject+RACDescription.h"
@@ -28,8 +29,10 @@
 #import "RACUnit.h"
 #import <libkern/OSAtomic.h>
 #import <objc/runtime.h>
+#import "atomic_ptr.h"
 
 NSErrorDomain const RACSignalErrorDomain = @"RACSignalErrorDomain";
+
 
 // Subscribes to the given signal with the given blocks.
 //
@@ -697,8 +700,8 @@ static RACDisposable *subscribeForever (RACSignal *signal, void (^next)(id), voi
 		#endif
 
 		while (YES) {
-			void *ptr = objectPtr;
-			if (OSAtomicCompareAndSwapPtrBarrier(ptr, NULL, &objectPtr)) {
+			atomic_ptr ptr = objectPtr;
+			if (atomic_compare_exchange_strong(&ptr, objectPtr, NULL)) {
 				break;
 			}
 		}
@@ -1048,17 +1051,17 @@ static RACDisposable *subscribeForever (RACSignal *signal, void (^next)(id), voi
 
 - (RACSignal *)deliverOnMainThread {
 	return [[RACSignal createSignal:^(id<RACSubscriber> subscriber) {
-		__block volatile int32_t queueLength = 0;
-		
+		__block volatile atomic_int queueLength = 0;
+
 		void (^performOnMainThread)(dispatch_block_t) = ^(dispatch_block_t block) {
-			int32_t queued = OSAtomicIncrement32(&queueLength);
+			int32_t queued = atomic_fetch_add_explicit(&queueLength, 1, memory_order_relaxed);
 			if (NSThread.isMainThread && queued == 1) {
 				block();
-				OSAtomicDecrement32(&queueLength);
+				atomic_fetch_sub_explicit(&queueLength, 1, memory_order_relaxed);
 			} else {
 				dispatch_async(dispatch_get_main_queue(), ^{
 					block();
-					OSAtomicDecrement32(&queueLength);
+					atomic_fetch_sub_explicit(&queueLength, 1, memory_order_relaxed);
 				});
 			}
 		};

@@ -6,6 +6,7 @@
 //  Copyright (c) 2012 GitHub, Inc. All rights reserved.
 //
 
+#import <stdatomic.h>
 #import "RACCommand.h"
 #import <ReactiveObjC/EXTScope.h>
 #import "NSArray+RACSequenceAdditions.h"
@@ -24,7 +25,7 @@ NSString * const RACUnderlyingCommandErrorKey = @"RACUnderlyingCommandErrorKey";
 
 @interface RACCommand () {
 	// Atomic backing variable for `allowsConcurrentExecution`.
-	volatile uint32_t _allowsConcurrentExecution;
+	volatile atomic_int_fast32_t _allowsConcurrentExecution;
 }
 
 /// A subject that sends added execution signals.
@@ -53,9 +54,10 @@ NSString * const RACUnderlyingCommandErrorKey = @"RACUnderlyingCommandErrorKey";
 
 - (void)setAllowsConcurrentExecution:(BOOL)allowed {
 	if (allowed) {
-		OSAtomicOr32Barrier(1, &_allowsConcurrentExecution);
-	} else {
-		OSAtomicAnd32Barrier(0, &_allowsConcurrentExecution);
+		//OSAtomicOr32Barrier(1, &_allowsConcurrentExecution);
+		atomic_fetch_or(&_allowsConcurrentExecution, 1);
+	} else {		
+		atomic_fetch_and(&_allowsConcurrentExecution, 0);
 	}
 
 	[self.allowsConcurrentExecutionSubject sendNext:@(_allowsConcurrentExecution)];

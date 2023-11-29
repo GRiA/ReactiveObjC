@@ -333,6 +333,7 @@
 		A9B3161C1B3940AF0001CB9C /* RACUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = D03764BE19EDA41200A782A9 /* RACUnit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		A9B316341B394C7F0001CB9C /* RACCompoundDisposableProvider.d in Sources */ = {isa = PBXBuildFile; fileRef = D037646A19EDA41200A782A9 /* RACCompoundDisposableProvider.d */; };
 		A9B316351B394C7F0001CB9C /* RACSignalProvider.d in Sources */ = {isa = PBXBuildFile; fileRef = D03764A319EDA41200A782A9 /* RACSignalProvider.d */; };
+		BAA07D192B17ECC500BCBF54 /* atomic_ptr.h in Headers */ = {isa = PBXBuildFile; fileRef = BAA07D182B17ECC500BCBF54 /* atomic_ptr.h */; };
 		BEBDD6E51CDC292D009A75A9 /* RACDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = D037646B19EDA41200A782A9 /* RACDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BEBDD6E61CDC292D009A75A9 /* RACDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = D037646B19EDA41200A782A9 /* RACDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		BEBDD6E71CDC292E009A75A9 /* RACDelegateProxy.h in Headers */ = {isa = PBXBuildFile; fileRef = D037646B19EDA41200A782A9 /* RACDelegateProxy.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -573,9 +574,7 @@
 		D037661619EDA41200A782A9 /* RACValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = D03764C119EDA41200A782A9 /* RACValueTransformer.m */; };
 		D037661719EDA41200A782A9 /* RACValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = D03764C119EDA41200A782A9 /* RACValueTransformer.m */; };
 		D037661919EDA41200A782A9 /* UIActionSheet+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D03764C219EDA41200A782A9 /* UIActionSheet+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D037661B19EDA41200A782A9 /* UIActionSheet+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D03764C319EDA41200A782A9 /* UIActionSheet+RACSignalSupport.m */; };
 		D037661D19EDA41200A782A9 /* UIAlertView+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D03764C419EDA41200A782A9 /* UIAlertView+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D037661F19EDA41200A782A9 /* UIAlertView+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D03764C519EDA41200A782A9 /* UIAlertView+RACSignalSupport.m */; };
 		D037662119EDA41200A782A9 /* UIBarButtonItem+RACCommandSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D03764C619EDA41200A782A9 /* UIBarButtonItem+RACCommandSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D037662319EDA41200A782A9 /* UIBarButtonItem+RACCommandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D03764C719EDA41200A782A9 /* UIBarButtonItem+RACCommandSupport.m */; };
 		D037662519EDA41200A782A9 /* UIButton+RACCommandSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = D03764C819EDA41200A782A9 /* UIButton+RACCommandSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -794,6 +793,7 @@
 		A97451351B3A935E00F48E55 /* watchOS-Framework.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "watchOS-Framework.xcconfig"; sourceTree = "<group>"; };
 		A97451361B3A935E00F48E55 /* watchOS-StaticLibrary.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; path = "watchOS-StaticLibrary.xcconfig"; sourceTree = "<group>"; };
 		A9B315541B3940610001CB9C /* ReactiveObjC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactiveObjC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BAA07D182B17ECC500BCBF54 /* atomic_ptr.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = atomic_ptr.h; sourceTree = "<group>"; };
 		D037642A19EDA41200A782A9 /* NSArray+RACSequenceAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+RACSequenceAdditions.h"; sourceTree = "<group>"; };
 		D037642B19EDA41200A782A9 /* NSArray+RACSequenceAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSArray+RACSequenceAdditions.m"; sourceTree = "<group>"; };
 		D037642C19EDA41200A782A9 /* NSControl+RACCommandSupport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSControl+RACCommandSupport.h"; sourceTree = "<group>"; };
@@ -1395,6 +1395,7 @@
 				D03764E519EDA41200A782A9 /* UITextField+RACSignalSupport.m */,
 				D03764E619EDA41200A782A9 /* UITextView+RACSignalSupport.h */,
 				D03764E719EDA41200A782A9 /* UITextView+RACSignalSupport.m */,
+				BAA07D182B17ECC500BCBF54 /* atomic_ptr.h */,
 			);
 			path = ReactiveObjC;
 			sourceTree = "<group>";
@@ -1757,6 +1758,7 @@
 				D037662519EDA41200A782A9 /* UIButton+RACCommandSupport.h in Headers */,
 				D037672819EDA63500A782A9 /* RACBehaviorSubject.h in Headers */,
 				2867B3A02ACEC19B0011E6E7 /* NSInvocation+RACTypeParsing.h in Headers */,
+				BAA07D192B17ECC500BCBF54 /* atomic_ptr.h in Headers */,
 				D037660119EDA41200A782A9 /* RACTestScheduler.h in Headers */,
 				D03765A319EDA41200A782A9 /* RACMulticastConnection.h in Headers */,
 				D03765B719EDA41200A782A9 /* RACReplaySubject.h in Headers */,
@@ -2439,7 +2441,6 @@
 				D037662B19EDA41200A782A9 /* UICollectionReusableView+RACSignalSupport.m in Sources */,
 				D037659919EDA41200A782A9 /* RACIndexSetSequence.m in Sources */,
 				D03765D919EDA41200A782A9 /* RACSignal+Operations.m in Sources */,
-				D037661B19EDA41200A782A9 /* UIActionSheet+RACSignalSupport.m in Sources */,
 				D037650319EDA41200A782A9 /* NSFileHandle+RACSupport.m in Sources */,
 				D03765E319EDA41200A782A9 /* RACStream.m in Sources */,
 				D037655719EDA41200A782A9 /* RACBehaviorSubject.m in Sources */,
@@ -2455,7 +2456,6 @@
 				D03764FB19EDA41200A782A9 /* NSDictionary+RACSequenceAdditions.m in Sources */,
 				D037656919EDA41200A782A9 /* RACCompoundDisposableProvider.d in Sources */,
 				D037653B19EDA41200A782A9 /* NSString+RACSequenceAdditions.m in Sources */,
-				D037661F19EDA41200A782A9 /* UIAlertView+RACSignalSupport.m in Sources */,
 				D03765E919EDA41200A782A9 /* RACStringSequence.m in Sources */,
 				D037660B19EDA41200A782A9 /* RACTupleSequence.m in Sources */,
 				D03765D519EDA41200A782A9 /* RACSignal.m in Sources */,
@@ -2954,6 +2954,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = ReactiveObjC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = ReactiveObjC/extobjc;
@@ -2971,6 +2972,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = ReactiveObjC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = ReactiveObjC/extobjc;
@@ -3069,6 +3071,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = ReactiveObjC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = ReactiveObjC/extobjc;
 			};
@@ -3154,6 +3157,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = ReactiveObjC/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.2;
 				USER_HEADER_SEARCH_PATHS = ReactiveObjC/extobjc;
